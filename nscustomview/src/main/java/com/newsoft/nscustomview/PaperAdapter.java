@@ -19,16 +19,21 @@ public class PaperAdapter extends FragmentPagerAdapter {
         titleTab = new ArrayList<>();
     }
 
-    public void addTab(Fragment fragment, String title){
+    public void addTab(Fragment fragment, String title) {
         listTab.add(fragment);
         titleTab.add(title);
     }
-    public void addTab(Fragment fragment){
+
+    public void addTab(Fragment fragment) {
         listTab.add(fragment);
         titleTab.add("");
     }
 
-    public void clear(){
+    public void setTitleTab(int pos, String title) {
+        titleTab.set(pos, title);
+    }
+
+    public void clear() {
         listTab.clear();
     }
 

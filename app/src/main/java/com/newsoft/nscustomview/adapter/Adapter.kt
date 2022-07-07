@@ -15,7 +15,7 @@ class Adapter : BaseAdapter<UserSuitableModel.Item?, Adapter.AdapterHolder>() {
 
 
     fun setItems(items: List<UserSuitableModel.Item?>?, index: Int) {
-        super.setItemsBase(items as java.util.ArrayList<UserSuitableModel.Item?>?, index)
+        super.setItems(items as java.util.ArrayList<UserSuitableModel.Item?>?, index)
     }
 
     override fun onCreateHolder(parent: ViewGroup, viewType: Int): AdapterHolder {

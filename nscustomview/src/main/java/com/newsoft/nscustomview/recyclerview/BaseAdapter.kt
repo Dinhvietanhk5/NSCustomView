@@ -45,12 +45,12 @@ abstract class BaseAdapter<T, VH : RecyclerView.ViewHolder?>() :
     }
 
     /**
-     * setItemsBase
+     * setItems
      *  index = 0 -> setItem
      *  index != 0 -> addItem
      */
     @SuppressLint("NotifyDataSetChanged")
-    fun setItemsBase(items: ArrayList<T>?, index: Int) {
+    fun setItems(items: ArrayList<T>?, index: Int) {
         recyclerViewEventLoad?.let {
             it.index = index
         }

@@ -69,16 +69,16 @@ class MainActivity : AppCompatActivity() {
 
 
         }
-//        items = ArrayList()
-//
-//        val adapter = Adapter()
-//        adapter.setRecyclerView(rvList, RvLayoutManagerEnums.GridLayoutManager_spanCount2)
-//
-//        adapter.setLoadData {
-//            val data = getData()
-//            adapter.setItems(data, index)
-//            index += 10
-//        }
+        items = ArrayList()
+
+        val adapter = Adapter()
+        adapter.setRecyclerView(rvList)
+
+        adapter.setLoadData {
+            val data = getData()
+            adapter.setItems(data, index)
+            index += 10
+        }
     }
 
     private fun getData(): List<UserSuitableModel.Item?> {

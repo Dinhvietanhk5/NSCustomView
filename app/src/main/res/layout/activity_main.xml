@@ -11,13 +11,13 @@
         android:id="@+id/edt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@color/teal_700"
         android:hint="text"
         android:paddingHorizontal="20dp"
         android:paddingVertical="12dp"
-        app:inputType="phone"
         android:textColor="@color/black"
         app:hintInputLayoutEnabled="false"
+        app:inputType="phone"
         tools:ignore="MissingConstraints" />
 
     <TextView
@@ -29,5 +29,10 @@
         android:gravity="center"
         android:paddingVertical="12dp"
         android:text="test" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

@@ -2,6 +2,7 @@ package com.newsoft.nscustomview.recyclerview
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
@@ -11,12 +12,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.newsoft.nscustomview.R
 import com.newsoft.nscustomview.recyclerview.interface_adapter.IViewHolder
 import com.newsoft.nscustomview.recyclerview.interface_adapter.OnAdapterListener
 import com.newsoft.nscustomview.recyclerview.interface_adapter.RecyclerViewLoadMoreListener
 import java.util.*
 
-abstract class BaseAdapter<T, VH : RecyclerView.ViewHolder?> : RecyclerView.Adapter<VH>(),
+abstract class BaseAdapter<T, VH : RecyclerView.ViewHolder?>() :
+    RecyclerView.Adapter<VH>(),
     IViewHolder<T, VH> {
 
     protected var items: ArrayList<T>?
@@ -31,6 +34,7 @@ abstract class BaseAdapter<T, VH : RecyclerView.ViewHolder?> : RecyclerView.Adap
     private val TAG = "BaseAdapter"
     private var swRefresh: SwipeRefreshLayout? = null
     private var countTest = 0
+    private var parent: ViewGroup?=null
     var isItemView = false //TODO: false itemview click, true không phải itemview click
 
     /**
@@ -126,6 +130,7 @@ abstract class BaseAdapter<T, VH : RecyclerView.ViewHolder?> : RecyclerView.Adap
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         context = parent.context
+        this.parent = parent
         return onCreateHolder(parent, viewType)
     }
 
@@ -136,6 +141,12 @@ abstract class BaseAdapter<T, VH : RecyclerView.ViewHolder?> : RecyclerView.Adap
     private fun realCount(): Int {
         return if (items!!.size == 0) countTest else items!!.size
     }
+
+    fun setView(layout: Int): View {
+        return LayoutInflater.from(context)
+            .inflate(layout, parent, false)
+    }
+
 
     /**
      * setCountItemTest

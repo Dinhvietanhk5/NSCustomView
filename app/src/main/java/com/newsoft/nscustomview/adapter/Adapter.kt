@@ -18,12 +18,8 @@ class Adapter : BaseAdapter<UserSuitableModel.Item?, Adapter.AdapterHolder>() {
         super.setItemsBase(items as java.util.ArrayList<UserSuitableModel.Item?>?, index)
     }
 
-    override fun onCreateHolder(parent: ViewGroup?, viewType: Int): AdapterHolder {
-        context = parent!!.context
-        return AdapterHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_text, parent, false)
-        )
+    override fun onCreateHolder(parent: ViewGroup, viewType: Int): AdapterHolder {
+        return AdapterHolder(setView(R.layout.item_text))
     }
 
     @SuppressLint("SetTextI18n")
@@ -41,4 +37,6 @@ class Adapter : BaseAdapter<UserSuitableModel.Item?, Adapter.AdapterHolder>() {
     class AdapterHolder(mView: View) : RecyclerView.ViewHolder(mView) {
         val tv = mView.tv
     }
+
+
 }

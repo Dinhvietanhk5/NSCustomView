@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
 import com.newsoft.nscustomview.R;
-import com.newsoft.nscustomview.dialog.views.CFPushButton;
+import com.newsoft.nscustomview.cfalertdialog.views.CFPushButton;
 
 import java.util.Random;
 

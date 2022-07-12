@@ -5,11 +5,10 @@ import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import com.newsoft.nscustomview.adapter.Adapter
-import com.newsoft.nscustomview.datepicker.DatePickerEnum
-import com.newsoft.nscustomview.datepicker.NSDateTimePicker
+import com.newsoft.nscustomview.cfalertdialog.CFAlertDialog
 import com.newsoft.nscustomview.model.UserSuitableModel
-import com.newsoft.nscustomview.recyclerview.RvLayoutManagerEnums
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -24,6 +23,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         btnTest.setOnClickListener {
+            val builder = CFAlertDialog.Builder(this)
+                .setDialogStyle(CFAlertDialog.CFAlertStyle.ALERT)
+                .setTextGravity(Gravity.CENTER)
+                .setTitle("Thông báo")
+                .setMessage("Đăng nhập không thành công")
+            builder.show()
 //            edt.validate()
 //            NSDateTimePicker(
 //                DatePickerEnum.DATE_TIME,

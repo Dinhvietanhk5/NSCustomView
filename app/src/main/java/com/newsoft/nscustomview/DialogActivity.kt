@@ -13,7 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.newsoft.nscustomview.dialog.CFAlertDialog
+import com.newsoft.nscustomview.cfalertdialog.CFAlertDialog
 import com.newsoft.nscustomview.views.ColorSelectionView
 import com.newsoft.nscustomview.views.SampleFooterView
 

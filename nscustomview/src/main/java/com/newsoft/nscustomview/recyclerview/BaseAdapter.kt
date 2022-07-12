@@ -18,7 +18,7 @@ import com.newsoft.nscustomview.recyclerview.interface_adapter.OnAdapterListener
 import com.newsoft.nscustomview.recyclerview.interface_adapter.RecyclerViewLoadMoreListener
 import java.util.*
 
-abstract class BaseAdapter<T, VH : RecyclerView.ViewHolder?>() :
+abstract class BaseAdapter<T, VH : RecyclerView.ViewHolder>() :
     RecyclerView.Adapter<VH>(),
     IViewHolder<T, VH> {
 

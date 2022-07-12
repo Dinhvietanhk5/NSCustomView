@@ -21,15 +21,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        edt.pass="234"
 
         btnTest.setOnClickListener {
-            val builder = CFAlertDialog.Builder(this)
-                .setDialogStyle(CFAlertDialog.CFAlertStyle.ALERT)
-                .setTextGravity(Gravity.CENTER)
-                .setTitle("Thông báo")
-                .setMessage("Đăng nhập không thành công")
-            builder.show()
-//            edt.validate()
+            edt.reset()
+//            val builder = CFAlertDialog.Builder(this)
+//                .setDialogStyle(CFAlertDialog.CFAlertStyle.ALERT)
+//                .setTextGravity(Gravity.CENTER)
+//                .setTitle("Thông báo")
+//                .setMessage("Đăng nhập không thành công")
+//            builder.show()
+            edt.validate()
 //            NSDateTimePicker(
 //                DatePickerEnum.DATE_TIME,
 //                this,

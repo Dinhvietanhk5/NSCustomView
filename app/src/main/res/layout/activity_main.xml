@@ -17,7 +17,7 @@
         android:paddingVertical="12dp"
         android:textColor="@color/black"
         app:hintInputLayoutEnabled="false"
-        app:inputType="phone"
+        app:inputType="pass"
         tools:ignore="MissingConstraints" />
 
     <TextView

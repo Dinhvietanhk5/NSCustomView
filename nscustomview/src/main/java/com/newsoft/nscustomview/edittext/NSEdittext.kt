@@ -355,16 +355,23 @@ class NSEdittext @JvmOverloads constructor(
                     text, strContains
                 )
                 Constant.TEXT_PASS -> {
-                    val isAlphanumeric = validateTor.isAlphanumeric(text)
-                    if (TextUtils.isEmpty(pass)) {
-                        isValidate = isAlphanumeric
-                    } else {
-                        val isAlphanumeric2 = validateTor.isAlphanumeric(pass)
-                        if (isAlphanumeric && isAlphanumeric2) {
-                            isValidate = validateTor.containsSubstring(text, pass)
-                            if (!isValidate) errorString = "Mật khẩu không khớp !"
-                        } else isValidate = false
-                    }
+
+                    if (!TextUtils.isEmpty(pass)) {
+                        isValidate = text == pass
+                        if (!isValidate) errorString = "Mật khẩu không khớp !"
+                    } else
+                        isValidate = text!!.isNotEmpty()
+
+//                    val isAlphanumeric = validateTor.isEmpty(text)
+//                    if (TextUtils.isEmpty(pass)) {
+//                        isValidate = isAlphanumeric
+//                    } else {
+//                        val isAlphanumeric2 = validateTor.isEmpty(pass)
+//                        if (isAlphanumeric && isAlphanumeric2) {
+//                            isValidate = validateTor.containsSubstring(text, pass)
+//                            if (!isValidate) errorString = "Mật khẩu không khớp !"
+//                        } else isValidate = false
+//                    }
                 }
             }
             isValidate = !isValidate

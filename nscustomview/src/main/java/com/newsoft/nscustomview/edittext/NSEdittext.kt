@@ -67,6 +67,7 @@ class NSEdittext @JvmOverloads constructor(
     protected var floatminNumber = 0f
     protected var floatmaxNumber = 0f
     private var isHintTextInputLayout = false
+    private var isHidePass = true
 
     //TODO: value validation
     private var min = 0
@@ -135,20 +136,22 @@ class NSEdittext @JvmOverloads constructor(
 //                [typedArray.getInt(R.styleable.NSEdittext_pattern, 0)];
         mEtBg = typedArray.getResourceId(R.styleable.NSEdittext_android_background, -1)
         mText = typedArray.getString(R.styleable.NSEdittext_android_text)
+
         mPaddingVertical = typedArray.getDimensionPixelSize(
             R.styleable.NSEdittext_android_paddingVertical, 0
         ).toFloat()
         mPaddingHorizontal = typedArray.getDimensionPixelSize(
             R.styleable.NSEdittext_android_paddingHorizontal, 0
         ).toFloat()
+
+        mPaddingStart = typedArray.getDimensionPixelSize(
+            R.styleable.NSEdittext_android_paddingStart, 0
+        ).toFloat()
         mPaddingEnd = typedArray.getDimensionPixelSize(
             R.styleable.NSEdittext_android_paddingEnd, 0
         ).toFloat()
         mPaddingTop = typedArray.getDimensionPixelSize(
             R.styleable.NSEdittext_android_paddingTop, 0
-        ).toFloat()
-        mPaddingEnd = typedArray.getDimensionPixelSize(
-            R.styleable.NSEdittext_android_paddingStart, 0
         ).toFloat()
         mPaddingBottom = typedArray.getDimensionPixelSize(
             R.styleable.NSEdittext_android_paddingBottom, 0
@@ -181,20 +184,12 @@ class NSEdittext @JvmOverloads constructor(
         editText!!.imeOptions = mImeOptions
         editText!!.typeface = Typeface.defaultFromStyle(mEdtStyle)
         editText!!.gravity = mGravity
-        if (mPaddingVertical != 0f) {
-            mPaddingTop = mPaddingVertical
-            mPaddingBottom = mPaddingVertical
+
+        if (mGravity == Gravity.CENTER) {
+            mPaddingStart = 137f
+            mPaddingEnd = 137f
         }
-        if (mPaddingHorizontal != 0f) {
-            mPaddingStart = mPaddingHorizontal
-            mPaddingEnd = mPaddingHorizontal
-        }
-        editText!!.setPadding(
-            mPaddingStart.toInt(),
-            mPaddingTop.toInt(),
-            mPaddingEnd.toInt(),
-            mPaddingBottom.toInt()
-        )
+
         if (mEtBg != -1) {
             @SuppressLint("UseCompatLoadingForDrawables") val drawable =
                 resources.getDrawable(mEtBg)
@@ -214,12 +209,34 @@ class NSEdittext @JvmOverloads constructor(
                 Constant.TEXT_EMAIL -> editText!!.inputType =
                     InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
                 Constant.TEXT_DATE -> editText!!.inputType = InputType.TYPE_CLASS_DATETIME
-                Constant.TEXT_PASS -> editText!!.inputType =
-                    InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                Constant.TEXT_PASS -> {
+                    this.isPasswordVisibilityToggleEnabled = true
+                    this.passwordVisibilityToggleContentDescription = "description"
+                    editText!!.inputType =
+                        InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                }
                 Constant.TEXT_NUMERIC, Constant.TEXT_NUMERIC_RANGE, Constant.TEXT_FLOAT_NUMERIC_RANGE, Constant.TEXT_MONEY -> editText!!.inputType =
                     InputType.TYPE_CLASS_NUMBER
                 else -> editText!!.inputType = InputType.TYPE_CLASS_TEXT
             }
+
+
+        if (mPaddingVertical != 0f) {
+            mPaddingTop = mPaddingVertical
+            mPaddingBottom = mPaddingVertical
+        }
+        if (mPaddingHorizontal != 0f) {
+            mPaddingStart = mPaddingHorizontal
+            mPaddingEnd = mPaddingHorizontal
+        }
+
+        editText!!.setPadding(
+            mPaddingStart.toInt(),
+            mPaddingTop.toInt(),
+            mPaddingEnd.toInt(),
+            mPaddingBottom.toInt()
+        )
+
         editText!!.setOnEditorActionListener { v: TextView?, actionId: Int, event: KeyEvent? ->
             if (imeOptionsListener == null) return@setOnEditorActionListener false else {
                 imeOptionsListener!!.onClick(actionId)
@@ -230,6 +247,7 @@ class NSEdittext @JvmOverloads constructor(
             showError(false)
             false
         }
+
         var current = ""
         editText!!.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(
@@ -264,11 +282,23 @@ class NSEdittext @JvmOverloads constructor(
             }
         })
 
-        setEndIconOnClickListener {
-            editText!!.setText("")
-            showError(false)
-        }
+        if (mInputType != Constant.TEXT_PASS)
+            setEndIconOnClickListener {
+                editText!!.setText("")
+                showError(false)
+            }
     }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setTextInputLayout() {
+        if (endIconMode != END_ICON_CUSTOM) endIconMode =
+            if (mInputType == Constant.TEXT_PASS) END_ICON_PASSWORD_TOGGLE else END_ICON_CLEAR_TEXT
+        isHintEnabled = isHintTextInputLayout
+        gravity = mGravity
+        setPadding(0, 0, 0, 0)
+
+    }
+
 
     fun formatNumber(number: Int): String {
         return if (number < 0 && number > -1000 || number in 1..999) {
@@ -283,14 +313,6 @@ class NSEdittext @JvmOverloads constructor(
         }
     }
 
-
-    @SuppressLint("ClickableViewAccessibility")
-    private fun setTextInputLayout() {
-        if (endIconMode != END_ICON_CUSTOM) endIconMode =
-            if (mInputType == Constant.TEXT_PASS) END_ICON_PASSWORD_TOGGLE else END_ICON_CLEAR_TEXT
-        isHintEnabled = isHintTextInputLayout
-        setPadding(0, 0, 0, 0)
-    }
 
     /**
      * set View

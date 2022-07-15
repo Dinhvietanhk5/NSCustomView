@@ -68,7 +68,6 @@ class NSEdittext @JvmOverloads constructor(
     protected var floatminNumber = 0f
     protected var floatmaxNumber = 0f
     private var isHintTextInputLayout = false
-    private var isHidePass = true
 
     //TODO: value validation
     private var min = 0
@@ -93,12 +92,13 @@ class NSEdittext @JvmOverloads constructor(
             R.styleable.NSEdittext, 0, 0
         )
         parseStyledAttributes(typedArray)
-        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        if (imm.isAcceptingText) {
-            Log.e("NSEdittext", "Software Keyboard was shown")
-        } else {
-            Log.e("NSEdittext", "Software Keyboard was not shown")
-        }
+
+//        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//        if (imm.isAcceptingText) {
+//            Log.e("NSEdittext", "Software Keyboard was shown")
+//        } else {
+//            Log.e("NSEdittext", "Software Keyboard was not shown")
+//        }
         setTextInputLayout()
         setEditText()
     }
@@ -289,8 +289,11 @@ class NSEdittext @JvmOverloads constructor(
             override fun afterTextChanged(s: Editable) {
             }
         })
-        val formatted = formatMoney(editText!!.text.toString())
-        editText!!.setText(formatted)
+
+        if (mInputType == Constant.TEXT_MONEY && editText!!.text.toString().isNotEmpty()) {
+            val formatted = formatMoney(editText!!.text.toString())
+            editText!!.setText(formatted)
+        }
 
         if (mInputType != Constant.TEXT_PASS)
             setEndIconOnClickListener {

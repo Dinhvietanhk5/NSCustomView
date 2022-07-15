@@ -29,6 +29,7 @@ import com.newsoft.nscustomview.validatetor.ValidateTor
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
+import kotlin.Exception
 
 @SuppressLint("AppCompatCustomView")
 class NSEdittext @JvmOverloads constructor(
@@ -249,6 +250,8 @@ class NSEdittext @JvmOverloads constructor(
         }
 
         var current = ""
+        var selectionEnd = 0
+
         editText!!.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(
                 s: CharSequence,
@@ -260,17 +263,22 @@ class NSEdittext @JvmOverloads constructor(
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-
                 if (mInputType == Constant.TEXT_MONEY) {
                     if (s.toString().isNotEmpty() && s.toString() != current) {
-                        editText!!.removeTextChangedListener(this)
-                        val cleanString = s.toString().replace("[$,.]".toRegex(), "")
-                        val parsed = cleanString.toDouble()
-                        val formatted: String = formatNumber(parsed.toInt()).toString()
-                        current = formatted
-                        editText!!.setText(formatted)
-                        editText!!.setSelection(formatted.length)
-                        editText!!.addTextChangedListener(this)
+                        var formatted = ""
+                        try {
+                            selectionEnd = editText!!.selectionEnd
+
+                            editText!!.removeTextChangedListener(this)
+                            formatted = formatMoney(s.toString())
+                            current = formatted
+                            editText!!.setText(formatted)
+                            editText!!.addTextChangedListener(this)
+                            editText!!.setSelection(selectionEnd)
+                        } catch (e: Exception) {
+                            editText!!.setSelection(formatted.length)
+                            e.printStackTrace()
+                        }
                     }
                 }
 
@@ -281,6 +289,8 @@ class NSEdittext @JvmOverloads constructor(
             override fun afterTextChanged(s: Editable) {
             }
         })
+        val formatted = formatMoney(editText!!.text.toString())
+        editText!!.setText(formatted)
 
         if (mInputType != Constant.TEXT_PASS)
             setEndIconOnClickListener {
@@ -300,16 +310,25 @@ class NSEdittext @JvmOverloads constructor(
     }
 
 
-    fun formatNumber(number: Int): String {
-        return if (number < 0 && number > -1000 || number in 1..999) {
-            number.toString()
-        } else try {
-            val formatter: NumberFormat = DecimalFormat("###,###")
-            var resp = formatter.format(number.toLong())
-            resp = resp.replace(",".toRegex(), ".")
+    fun formatMoney(s: String): String {
+        val cleanString = s.replace("[$,.]".toRegex(), "")
+        val parsed = cleanString.toDouble()
+        return formatNumber(parsed.toLong())
+    }
+
+    private fun formatNumber(number: Long): String {
+        return try {
+//        if (number < 0 && number > -1000 || number in 1..999999999) {
+//            return number.toString()
+//        }
+            val formatter: NumberFormat =
+                DecimalFormat("###,###,###,###,###,###,###,###,###,###,###")
+            var resp = formatter.format(number)
+//            resp = resp.replace(".", ",")
             resp
         } catch (e: Exception) {
-            ""
+            Log.e("formatNumber", e.message!!)
+            "0"
         }
     }
 

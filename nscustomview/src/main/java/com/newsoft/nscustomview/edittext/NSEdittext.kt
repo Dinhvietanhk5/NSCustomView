@@ -417,6 +417,9 @@ class NSEdittext @JvmOverloads constructor(
 //                        } else isValidate = false
 //                    }
                 }
+                else -> {
+                    isValidate = text!!.isNotEmpty()
+                }
             }
             isValidate = !isValidate
             //TODO: true có lỗi, false ko lỗi

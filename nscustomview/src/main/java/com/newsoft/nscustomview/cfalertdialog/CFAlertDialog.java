@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
@@ -21,6 +22,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.ViewCompat;
 import androidx.appcompat.app.AppCompatDialog;
 import androidx.cardview.widget.CardView;
+
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -58,7 +60,7 @@ public class CFAlertDialog extends AppCompatDialog {
         BOTTOM_SHEET
     }
 
-    public enum CFAlertActionStyle{
+    public enum CFAlertActionStyle {
         DEFAULT,
         NEGATIVE,
         POSITIVE
@@ -110,7 +112,7 @@ public class CFAlertDialog extends AppCompatDialog {
         setupSubviews(view);
 
         // Set the size to adjust when keyboard shown
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE|WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         // Disable the view initially
         setEnabled(false);
@@ -182,10 +184,15 @@ public class CFAlertDialog extends AppCompatDialog {
     private void populateCardView() {
         // Icon
         if (params.iconDrawableId != -1) {
-            setIcon(params.iconDrawableId);
+            if (params.iconWight != 0 || params.iconHeight != 0) {
+                setIcon(params.iconDrawableId, params.iconWight, params.iconHeight);
+            } else
+                setIcon(params.iconDrawableId);
         } else if (params.iconDrawable != null) {
             setIcon(params.iconDrawable);
-        } else { setIcon(null); }
+        } else {
+            setIcon(null);
+        }
 
         // Title
         setTitle(params.title);
@@ -316,10 +323,10 @@ public class CFAlertDialog extends AppCompatDialog {
         setViewEnabled(cfDialogBackground, enabled);
     }
 
-    public void setBackgroundColor(int color, boolean animated){
+    public void setBackgroundColor(int color, boolean animated) {
 
         if (animated) {
-            int colorFrom = ((ColorDrawable)cfDialogBackground.getBackground()).getColor();
+            int colorFrom = ((ColorDrawable) cfDialogBackground.getBackground()).getColor();
             ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, color);
             colorAnimation.setDuration(getContext().getResources().getInteger(R.integer.cfdialog_animation_duration)); // milliseconds
             colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -331,15 +338,14 @@ public class CFAlertDialog extends AppCompatDialog {
 
             });
             colorAnimation.start();
-        }
-        else {
+        } else {
             cfDialogBackground.setBackgroundColor(color);
         }
     }
 
     public void setDialogBackgroundColor(int color, boolean animated) {
         if (animated) {
-            int colorFrom = ((ColorDrawable)dialogCardView.getBackground()).getColor();
+            int colorFrom = ((ColorDrawable) dialogCardView.getBackground()).getColor();
             ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, color);
             colorAnimation.setDuration(getContext().getResources().getInteger(R.integer.cfdialog_animation_duration)); // milliseconds
             colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -351,8 +357,7 @@ public class CFAlertDialog extends AppCompatDialog {
 
             });
             colorAnimation.start();
-        }
-        else {
+        } else {
             cfDialogScrollView.setBackgroundColor(color);
         }
     }
@@ -388,7 +393,7 @@ public class CFAlertDialog extends AppCompatDialog {
         setTitle(getContext().getString(titleId));
     }
 
-    public void setTitleColor (@ColorInt int color) {
+    public void setTitleColor(@ColorInt int color) {
         dialogTitleTextView.setTextColor(color);
     }
 
@@ -435,8 +440,8 @@ public class CFAlertDialog extends AppCompatDialog {
         if (headerView != null) {
             cfDialogHeaderLinearLayout.setVisibility(View.VISIBLE);
             cfDialogHeaderLinearLayout.addView(headerView,
-                                               ViewGroup.LayoutParams.MATCH_PARENT,
-                                               ViewGroup.LayoutParams.WRAP_CONTENT);
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
 
             // Allows the header view to overlap the alert content if needed
             disableClipOnParents(headerView);
@@ -452,6 +457,13 @@ public class CFAlertDialog extends AppCompatDialog {
     }
 
     public void setIcon(@DrawableRes int iconDrawableId) {
+        setIcon(ContextCompat.getDrawable(getContext(), iconDrawableId));
+    }
+
+    public void setIcon(@DrawableRes int iconDrawableId, int width, int height) {
+        cfDialogIconImageView.getLayoutParams().height = height;
+        cfDialogIconImageView.getLayoutParams().width = width;
+        cfDialogIconImageView.requestLayout();
         setIcon(ContextCompat.getDrawable(getContext(), iconDrawableId));
     }
 
@@ -501,8 +513,8 @@ public class CFAlertDialog extends AppCompatDialog {
         cfDialogFooterLinearLayout.removeAllViews();
         if (footerView != null) {
             cfDialogFooterLinearLayout.addView(footerView,
-                                               ViewGroup.LayoutParams.MATCH_PARENT,
-                                               ViewGroup.LayoutParams.WRAP_CONTENT);
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
             cfDialogFooterLinearLayout.setVisibility(View.VISIBLE);
 
             // Allows the footer view to overlap the alert content if needed
@@ -608,8 +620,7 @@ public class CFAlertDialog extends AppCompatDialog {
             buttonDrawable.setColor(actionButton.backgroundColor);
             buttonDrawable.setCornerRadius(getContext().getResources().getDimension(R.dimen.cfdialog_button_corner_radius));
             ViewCompat.setBackground(button, buttonDrawable);
-        }
-        else if (actionButton.backgroundDrawableId != -1) {
+        } else if (actionButton.backgroundDrawableId != -1) {
             ViewCompat.setBackground(button, ContextCompat.getDrawable(getContext(), actionButton.backgroundDrawableId));
         }
 
@@ -677,7 +688,7 @@ public class CFAlertDialog extends AppCompatDialog {
             selectableItemsContainer.removeAllViews();
             selectableItemsContainer.setVisibility(View.VISIBLE);
             RadioGroup radioGroup = (RadioGroup) getLayoutInflater().inflate(R.layout.cfdialog_single_select_item_layout, selectableItemsContainer)
-                                                                    .findViewById(R.id.cfstage_single_select_radio_group);
+                    .findViewById(R.id.cfstage_single_select_radio_group);
             radioGroup.removeAllViews();
             for (int i = 0; i < singleSelectItems.length; i++) {
                 String item = singleSelectItems[i];
@@ -851,7 +862,7 @@ public class CFAlertDialog extends AppCompatDialog {
         cfDialogContainer.setLayoutParams(cardContainerLayoutParams);
     }
 
-    private float getCornerRadius(){
+    private float getCornerRadius() {
         float cornerRadius = getContext().getResources().getDimension(R.dimen.cfdialog_card_corner_radius);
 
         // Special layout properties to be added here.
@@ -870,7 +881,7 @@ public class CFAlertDialog extends AppCompatDialog {
     }
 
     private int getOuterMargin() {
-        int margin = (int)getContext().getResources().getDimension(R.dimen.cfdialog_outer_margin);
+        int margin = (int) getContext().getResources().getDimension(R.dimen.cfdialog_outer_margin);
 
         if (params.dialogOuterMargin != -1) {
             margin = params.dialogOuterMargin;
@@ -967,7 +978,9 @@ public class CFAlertDialog extends AppCompatDialog {
             return this;
         }
 
-        public Builder setIcon(@DrawableRes int iconDrawableId) {
+        public Builder setIcon(@DrawableRes int iconDrawableId, int iconHeight, int iconWight) {
+            this.params.iconHeight = iconHeight;
+            this.params.iconWight = iconWight;
             this.params.iconDrawableId = iconDrawableId;
             this.params.iconDrawable = null;
             return this;
@@ -1085,12 +1098,15 @@ public class CFAlertDialog extends AppCompatDialog {
     private static class DialogParams {
 
         private Context context;
-        private @ColorInt int backgroundColor = Color.parseColor("#B3000000");
-        private @ColorInt int dialogBackgroundColor = Color.parseColor("#FFFFFF");
+        private @ColorInt
+        int backgroundColor = Color.parseColor("#B3000000");
+        private @ColorInt
+        int dialogBackgroundColor = Color.parseColor("#FFFFFF");
         private float dialogCornerRadius = -1;
         private int dialogOuterMargin = -1;
         private CharSequence message, title;
-        private @ColorInt int textColor = -1;
+        private @ColorInt
+        int textColor = -1;
         private int theme = R.style.CFDialog,
                 textGravity = Gravity.LEFT,
                 iconDrawableId = -1,
@@ -1098,6 +1114,7 @@ public class CFAlertDialog extends AppCompatDialog {
         private CFAlertStyle dialogStyle = CFAlertStyle.ALERT;
         private View headerView, footerView;
         private int headerViewId = -1, footerViewId = -1;
+        private int iconHeight = 0, iconWight = 0;
         private Drawable contentImageDrawable, iconDrawable;
         private List<CFAlertActionButton> buttons = new ArrayList<>();
         private OnDismissListener onDismissListener;
@@ -1151,7 +1168,8 @@ public class CFAlertDialog extends AppCompatDialog {
             }
         }
 
-        private @DrawableRes int getBackgroundDrawable(CFAlertActionStyle style) {
+        private @DrawableRes
+        int getBackgroundDrawable(CFAlertActionStyle style) {
             @DrawableRes int backgroundDrawable = 0;
             switch (style) {
                 case NEGATIVE:
@@ -1167,7 +1185,8 @@ public class CFAlertDialog extends AppCompatDialog {
             return backgroundDrawable;
         }
 
-        private @ColorInt int getTextColor(CFAlertActionStyle style) {
+        private @ColorInt
+        int getTextColor(CFAlertActionStyle style) {
             @ColorInt int textColor = -1;
             switch (style) {
                 case NEGATIVE:

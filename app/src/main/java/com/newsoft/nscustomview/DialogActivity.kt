@@ -123,7 +123,7 @@ class DialogActivity : AppCompatActivity(), SampleFooterView.FooterActionListene
 
         // Title icon
         if (showTitleIcon!!.isChecked) {
-            builder.setIcon(R.drawable.icon_drawable)
+//            builder.setIcon(R.drawable.icon_drawable)
         }
 
         // Buttons

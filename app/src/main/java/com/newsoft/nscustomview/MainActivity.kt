@@ -24,14 +24,15 @@ class MainActivity : AppCompatActivity() {
         edt.pass="234"
 
         btnTest.setOnClickListener {
-            edt.reset()
-//            val builder = CFAlertDialog.Builder(this)
-//                .setDialogStyle(CFAlertDialog.CFAlertStyle.ALERT)
-//                .setTextGravity(Gravity.CENTER)
-//                .setTitle("Thông báo")
-//                .setMessage("Đăng nhập không thành công")
-//            builder.show()
-            edt.validate()
+//            edt.reset()
+            val builder = CFAlertDialog.Builder(this)
+                .setDialogStyle(CFAlertDialog.CFAlertStyle.ALERT)
+                .setTextGravity(Gravity.CENTER)
+                .setIcon(com.newsoft.nscustomview.R.drawable.ic_header_icon,300,300)
+                .setTitle("Thông báo")
+                .setMessage("Đăng nhập không thành công")
+            builder.show()
+//            edt.validate()
 //            NSDateTimePicker(
 //                DatePickerEnum.DATE_TIME,
 //                this,
